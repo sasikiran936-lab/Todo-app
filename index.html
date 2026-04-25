@@ -15,11 +15,16 @@
       padding: 20px;
     }
 
+    h1 {
+      margin-bottom: 20px;
+    }
+
     input {
       padding: 10px;
-      width: 70%;
+      width: 65%;
       border-radius: 5px;
       border: none;
+      outline: none;
     }
 
     button {
@@ -28,16 +33,40 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-left: 5px;
+    }
+
+    ul {
+      padding: 0;
+      margin-top: 20px;
     }
 
     li {
       background: #1e293b;
-      margin: 10px;
+      margin: 10px auto;
       padding: 10px;
-      list-style: none;
+      width: 80%;
       border-radius: 5px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+    }
+
+    span {
+      flex: 1;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .done {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .delete-btn {
+      background: red;
+      color: white;
+      margin-left: 10px;
     }
   </style>
 </head>
@@ -46,7 +75,7 @@
 
 <h1>To-Do App</h1>
 
-<input type="text" id="taskInput" placeholder="Enter task">
+<input type="text" id="taskInput" placeholder="Enter a task">
 <button onclick="addTask()">Add</button>
 
 <ul id="taskList"></ul>
@@ -66,8 +95,10 @@
       let li = document.createElement("li");
 
       li.innerHTML = `
-        ${task.text}
-        <button onclick="removeTask(${index})">X</button>
+        <span class="${task.done ? 'done' : ''}" onclick="toggleTask(${index})">
+          ${task.text}
+        </span>
+        <button class="delete-btn" onclick="removeTask(${index})">X</button>
       `;
 
       list.appendChild(li);
@@ -78,9 +109,12 @@
     let input = document.getElementById("taskInput");
     let text = input.value.trim();
 
-    if (text === "") return;
+    if (text === "") {
+      alert("Enter a task");
+      return;
+    }
 
-    tasks.push({ text: text });
+    tasks.push({ text: text, done: false });
     saveTasks();
     renderTasks();
 
@@ -93,7 +127,13 @@
     renderTasks();
   }
 
-  // Load tasks on page load
+  function toggleTask(index) {
+    tasks[index].done = !tasks[index].done;
+    saveTasks();
+    renderTasks();
+  }
+
+  // Load tasks on start
   renderTasks();
 </script>
 
